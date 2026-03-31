@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1 class="glow-text">Activity Log</h1>
+    <p>Complete timeline of vehicle movements</p>
+</div>
+
+<div class="glass-panel" style="margin-bottom:50px;">
+    {% if activities %}
+    <div style="overflow-x:auto;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 15px;">Time</th>
+                <th style="padding: 15px;">Action</th>
+                <th style="padding: 15px;">Number Plate</th>
+                <th style="padding: 15px;">Slot Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in activities %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 15px; color:var(--text-muted);">{{ item.time }}</td>
+                <td style="padding: 15px;">
+                    {% if item.action == 'entered' %}
+                    <span style="color:var(--neon-blue); font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <div style="width:8px; height:8px; background:var(--neon-blue); border-radius:50%; box-shadow: 0 0 5px var(--neon-blue);"></div>
+                        Entered
+                    </span>
+                    {% else %}
+                    <span style="color:var(--success); font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <div style="width:8px; height:8px; background:var(--success); border-radius:50%; box-shadow: 0 0 5px var(--success);"></div>
+                        Freed
+                    </span>
+                    {% endif %}
+                </td>
+                <td style="padding: 15px; font-weight:bold;">{{ item.vehicle_number }}</td>
+                <td style="padding: 15px;">Slot {{ item.slot_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding: 40px; color:var(--text-muted);">
+        No activity recorded yet.
+    </div>
+    {% endif %}
+</div>
+
+<div class="text-center">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}

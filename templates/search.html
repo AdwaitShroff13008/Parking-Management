@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1 class="glow-text">Search Records</h1>
+    <p>Database query results</p>
+    
+    <div style="margin-top:20px; display:flex; justify-content:center;">
+        <form action="{{ url_for('search') }}" method="GET" style="display:flex; gap:10px; background:rgba(0,0,0,0.3); padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+            <input type="text" name="q" placeholder="Plate Number" value="{{ query }}" style="background:transparent; border:none; color:white; outline:none; padding:10px;">
+            <div style="width:1px; background:rgba(255,255,255,0.1); margin:5px 0;"></div>
+            <input type="date" name="date" value="{{ date_query }}" style="background:transparent; border:none; color:#8b949e; outline:none; padding:10px; color-scheme: dark;">
+            <button type="submit" class="btn btn-primary glow-effect" style="padding:10px 20px;">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="glass-panel" style="margin-bottom:50px;">
+    {% if records %}
+    <div style="overflow-x:auto;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 15px;">Number Plate</th>
+                <th style="padding: 15px;">Owner</th>
+                <th style="padding: 15px;">Entry Time</th>
+                <th style="padding: 15px;">Exit Time</th>
+                <th style="padding: 15px;">Fee</th>
+                <th style="padding: 15px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 15px; font-weight:bold; color:var(--neon-blue);">{{ r.vehicle_number }}</td>
+                <td style="padding: 15px;">{{ r.owner_name }}</td>
+                <td style="padding: 15px;">{{ r.entry_time }}</td>
+                <td style="padding: 15px;">{{ r.exit_time if r.exit_time else 'Parked' }}</td>
+                <td style="padding: 15px; color:#ffd700;">{% if r.fee %}₹{{ r.fee }}{% else %}-{% endif %}</td>
+                <td style="padding: 15px;">
+                    {% if r.status == 'parked' %}
+                    <span style="color:var(--neon-blue);">Active</span>
+                    {% else %}
+                    <span style="color:var(--text-muted);">Exited</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding: 40px; color:var(--text-muted);">
+        No records found matching your query.
+    </div>
+    {% endif %}
+</div>
+
+<div class="text-center">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}

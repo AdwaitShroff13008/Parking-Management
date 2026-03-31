@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <div class="glass-panel form-card">
+        <h2 class="glow-text">Vehicle Entry</h2>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('entry') }}" class="modern-form">
+            <div class="form-group">
+                <label for="vehicle_number">Vehicle Number</label>
+                <input type="text" id="vehicle_number" name="vehicle_number" required placeholder="e.g. MH 12 AB 1234">
+            </div>
+
+            <div class="form-group">
+                <label for="owner_name">Owner Name</label>
+                <input type="text" id="owner_name" name="owner_name" required placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="vehicle_type">Vehicle Type</label>
+                <select id="vehicle_type" name="vehicle_type" required>
+                    <option value="" disabled selected>Select type</option>
+                    <option value="Car">Car</option>
+                    <option value="Bike">Bike</option>
+                    <option value="Truck">Truck</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="parking_class">Parking Class</label>
+                <select id="parking_class" name="parking_class" required>
+                    <option value="Standard" selected>Standard (₹20/hr)</option>
+                    <option value="Premium">Premium (₹50/hr)</option>
+                    <option value="VIP">VIP (₹100/hr)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="slot_number">Slot Number (1-60)</label>
+                <input type="number" id="slot_number" name="slot_number" min="1" max="60" required placeholder="1" value="{{ prefill_slot }}">
+                <small style="color:var(--text-muted); display:block; margin-top:5px;">Basement: 1-20 | Floor 1: 21-40 | Floor 2: 41-60</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary glow-effect w-100 mt-4">
+                <span>Register Entry</span>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

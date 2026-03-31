@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1 class="glow-text">System Overview</h1>
+    <p>Real-time monitoring of P-Manager 3000</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card glass-panel">
+        <div class="stat-icon neon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Total Slots</h3>
+            <div class="stat-value">{{ total }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon neon-green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Available</h3>
+            <div class="stat-value text-green">{{ available }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon neon-red">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Occupied</h3>
+            <div class="stat-value text-red">{{ occupied }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="color:#b19cd9; box-shadow: inset 0 0 20px rgba(177,156,217,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2"></path></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Today</h3>
+            <div class="stat-value" style="color:#b19cd9;">{{ customers_today }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="color:#ffb347; box-shadow: inset 0 0 20px rgba(255,179,71,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+        <div class="stat-info">
+            <h3>This Month</h3>
+            <div class="stat-value" style="color:#ffb347;">{{ customers_month }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="color:#77dd77; box-shadow: inset 0 0 20px rgba(119,221,119,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+        <div class="stat-info">
+            <h3>This Year</h3>
+            <div class="stat-value" style="color:#77dd77;">{{ customers_year }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="color:#ffd700; box-shadow: inset 0 0 20px rgba(255,215,0,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Earned Today</h3>
+            <div class="stat-value" style="color:#ffd700;">₹{{ earnings_today }}</div>
+        </div>
+    </div>
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="color:#ff8c00; box-shadow: inset 0 0 20px rgba(255,140,0,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+        </div>
+        <div class="stat-info">
+            <h3>Earned Month</h3>
+            <div class="stat-value" style="color:#ff8c00;">₹{{ earnings_month }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="chart-container glass-panel" style="margin-bottom: 50px; padding: 20px; height: 300px;">
+    <canvas id="customersChart"></canvas>
+</div>
+
+<div class="quick-actions">
+    <a href="{{ url_for('entry') }}" class="btn btn-primary glow-effect">
+        <span>Vehicle Entry →</span>
+    </a>
+    <a href="{{ url_for('exit_vehicle') }}" class="btn btn-secondary glow-effect">
+        <span>Vehicle Exit →</span>
+    </a>
+</div>
+
+<div class="dashboard-header" style="margin-top: 60px;">
+    <h2 class="glow-text" style="font-size: 36px; margin-bottom:0;">3D Blueprint</h2>
+    <p>Live isometric floorplan</p>
+</div>
+
+<div class="blueprint-container" id="blueprint-container">
+    <button id="btn-back-overview" class="btn btn-secondary glow-effect" style="display:none; position:absolute; top: -20px; right: 20px; z-index: 100;" onclick="closeFloorOverview()">
+        ← Back to Overview
+    </button>
+    
+    <div class="blueprint-floor floor-layer-2" id="floor-layer-floor2" onclick="openFloor('floor2')">
+        <div class="floor-label">Floor 2 (41-60)</div>
+        {% for slot in slots %}
+        {% if slot.number > 40 %}
+        <a href="{% if slot.status == 'Available' %}{{ url_for('entry', slot=slot.number) }}{% else %}#{% endif %}" 
+           {% if slot.status == 'Occupied' %}onclick="openVehicleModal('{{ slot.vehicle.vehicle_number }}'); event.stopPropagation();"{% endif %} 
+           style="text-decoration:none; color:inherit;"
+           class="blueprint-slot {% if slot.status == 'Occupied' %}occupied class-{{ slot.vehicle.parking_class|default('Standard') }}{% else %}available{% endif %} slot-floor2" id="slot-{{ slot.number }}">
+            <div class="slot-info">
+                <h4>{{ slot.number }}</h4>
+                {% if slot.status == 'Occupied' %}
+                
+                {% if slot.vehicle.vehicle_type == 'Car' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>
+                {% elif slot.vehicle.vehicle_type == 'Truck' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                {% else %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"></path></svg>
+                {% endif %}
+
+                <div class="slot-badge">{{ slot.vehicle.parking_class|default('Standard') }}</div>
+                <div class="slot-vehicle-text">{{ slot.vehicle.vehicle_number|default(slot.vehicle) }}</div>
+                {% endif %}
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="blueprint-floor floor-layer-1" id="floor-layer-floor1" onclick="openFloor('floor1')">
+        <div class="floor-label">Floor 1 (21-40)</div>
+        {% for slot in slots %}
+        {% if slot.number > 20 and slot.number <= 40 %}
+        <a href="{% if slot.status == 'Available' %}{{ url_for('entry', slot=slot.number) }}{% else %}#{% endif %}" 
+           {% if slot.status == 'Occupied' %}onclick="openVehicleModal('{{ slot.vehicle.vehicle_number }}'); event.stopPropagation();"{% endif %} 
+           style="text-decoration:none; color:inherit;"
+           class="blueprint-slot {% if slot.status == 'Occupied' %}occupied class-{{ slot.vehicle.parking_class|default('Standard') }}{% else %}available{% endif %} slot-floor1" id="slot-{{ slot.number }}">
+            <div class="slot-info">
+                <h4>{{ slot.number }}</h4>
+                {% if slot.status == 'Occupied' %}
+                
+                {% if slot.vehicle.vehicle_type == 'Car' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>
+                {% elif slot.vehicle.vehicle_type == 'Truck' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                {% else %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"></path></svg>
+                {% endif %}
+
+                <div class="slot-badge">{{ slot.vehicle.parking_class|default('Standard') }}</div>
+                <div class="slot-vehicle-text">{{ slot.vehicle.vehicle_number|default(slot.vehicle) }}</div>
+                {% endif %}
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="blueprint-floor floor-layer-basement" id="floor-layer-basement" onclick="openFloor('basement')">
+        <div class="floor-label">Basement (1-20)</div>
+        {% for slot in slots %}
+        {% if slot.number <= 20 %}
+        <a href="{% if slot.status == 'Available' %}{{ url_for('entry', slot=slot.number) }}{% else %}#{% endif %}" 
+           {% if slot.status == 'Occupied' %}onclick="openVehicleModal('{{ slot.vehicle.vehicle_number }}'); event.stopPropagation();"{% endif %} 
+           style="text-decoration:none; color:inherit;"
+           class="blueprint-slot {% if slot.status == 'Occupied' %}occupied class-{{ slot.vehicle.parking_class|default('Standard') }}{% else %}available{% endif %} slot-basement" id="slot-{{ slot.number }}">
+            <div class="slot-info">
+                <h4>{{ slot.number }}</h4>
+                {% if slot.status == 'Occupied' %}
+                
+                {% if slot.vehicle.vehicle_type == 'Car' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>
+                {% elif slot.vehicle.vehicle_type == 'Truck' %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                {% else %}
+                <svg class="vehicle-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"></path></svg>
+                {% endif %}
+
+                <div class="slot-badge">{{ slot.vehicle.parking_class|default('Standard') }}</div>
+                <div class="slot-vehicle-text">{{ slot.vehicle.vehicle_number|default(slot.vehicle) }}</div>
+                {% endif %}
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('customersChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: JSON.parse('{{ graph_labels | tojson | safe }}'),
+            datasets: [{
+                label: 'Vehicles Entered',
+                data: JSON.parse('{{ graph_data | tojson | safe }}'),
+                backgroundColor: 'rgba(163, 184, 204, 0.2)',
+                borderColor: '#a3b8cc',
+                borderWidth: 2,
+                pointBackgroundColor: '#fff',
+                fill: true,
+                tension: 0.4,
+                yAxisID: 'y'
+            },
+            {
+                label: 'Earnings (₹)',
+                data: JSON.parse('{{ earnings_graph_data | tojson | safe }}'),
+                backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                borderColor: '#ffd700',
+                borderWidth: 2,
+                pointBackgroundColor: '#fff',
+                fill: true,
+                tension: 0.4,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { 
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#a3b8cc', stepSize: 1 }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: '#ffd700' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#8b949e' }
+                }
+            },
+            plugins: {
+                legend: { labels: { color: '#e2e8f0' } }
+            }
+        }
+    });
+</script>
+
+<!-- Vehicle Info Modal -->
+<div class="modal-overlay" id="vehicleModal">
+    <div class="modal-content glass-panel" style="position:relative;">
+        <button onclick="closeVehicleModal()" style="position:absolute; right:20px; top:20px; background:transparent; border:none; color:white; font-size:24px; cursor:pointer;" type="button">&times;</button>
+        <h3 class="glow-text" style="font-size: 28px; margin-bottom:5px;" id="modal-vehicle">MH 12 AB 1234</h3>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom: 20px;" id="modal-owner">John Doe</p>
+        
+        <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:12px; margin-bottom: 20px;">
+            <div class="detail-row">
+                <span>Entry Time:</span> <span id="modal-entry">...</span>
+            </div>
+            <div class="detail-row">
+                <span>Exit Time:</span> <span id="modal-exit" style="color:var(--neon-blue);">...</span>
+            </div>
+            <div class="receipt-divider"></div>
+            <div class="detail-row">
+                <span>Total Visits:</span> <span id="modal-visits">...</span>
+            </div>
+            <div class="detail-row">
+                <span>Total Spent:</span> <span id="modal-spent" style="color:#ffd700;">...</span>
+            </div>
+        </div>
+        
+        <div style="display:flex; justify-content:center;">
+             <a href="#" id="modal-checkout-btn" class="btn btn-secondary glow-effect w-100">Process Checkout</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function openFloor(floorId) {
+    const container = document.getElementById('blueprint-container');
+    if (container.classList.contains('floor-open-mode')) return;
+    
+    container.classList.add('floor-open-mode');
+    
+    document.querySelectorAll('.blueprint-floor').forEach(layer => {
+        if (layer.id === 'floor-layer-' + floorId) {
+            layer.classList.add('active');
+        } else {
+            layer.classList.remove('active');
+        }
+    });
+    
+    document.getElementById('btn-back-overview').style.display = 'block';
+}
+
+function closeFloorOverview(e) {
+    if (e) e.stopPropagation();
+    const container = document.getElementById('blueprint-container');
+    container.classList.remove('floor-open-mode');
+    
+    document.querySelectorAll('.blueprint-floor').forEach(layer => {
+        layer.classList.remove('active');
+    });
+    
+    document.getElementById('btn-back-overview').style.display = 'none';
+}
+
+function openVehicleModal(vehicleNumber) {
+    document.getElementById('vehicleModal').classList.add('active');
+    document.getElementById('modal-vehicle').innerText = vehicleNumber;
+    document.getElementById('modal-owner').innerText = "Loading...";
+    document.getElementById('modal-entry').innerText = "...";
+    document.getElementById('modal-exit').innerText = "...";
+    document.getElementById('modal-visits').innerText = "...";
+    document.getElementById('modal-spent').innerText = "...";
+    
+    document.getElementById('modal-checkout-btn').href = "/exit?vehicle=" + encodeURIComponent(vehicleNumber);
+    document.getElementById('modal-checkout-btn').style.display = 'none'; // hide until loaded
+    
+    fetch('/api/vehicle/' + encodeURIComponent(vehicleNumber))
+        .then(res => res.json())
+        .then(data => {
+            if(data.error) return;
+            document.getElementById('modal-owner').innerText = data.owner_name;
+            document.getElementById('modal-entry').innerText = data.latest_entry;
+            document.getElementById('modal-exit').innerText = data.latest_exit;
+            document.getElementById('modal-visits').innerText = data.total_visits;
+            document.getElementById('modal-spent').innerText = "₹" + data.total_spent;
+            
+            // if currently parked, show checkout button
+            if (data.latest_exit === 'Currently Parked') {
+                document.getElementById('modal-checkout-btn').style.display = 'block';
+            }
+        });
+}
+
+function closeVehicleModal() {
+    document.getElementById('vehicleModal').classList.remove('active');
+}
+</script>
+{% endblock %}

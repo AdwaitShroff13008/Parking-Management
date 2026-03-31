@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <div class="glass-panel form-card">
+        <h2 class="glow-text">Vehicle Exit</h2>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if checkout_pending %}
+        <div class="receipt">
+            <div class="receipt-header">
+                <h3>Checkout Details</h3>
+                <p style="text-align:center; color: var(--text-muted);">Review before confirming</p>
+            </div>
+
+            <div class="receipt-details">
+                <div class="detail-row">
+                    <span>Vehicle:</span>
+                    <strong>{{ vehicle_number }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Class:</span>
+                    <span>{{ parking_class }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Duration:</span>
+                    <span>{{ duration }}</span>
+                </div>
+                <hr class="receipt-divider">
+                <div class="detail-row total">
+                    <span>Total Fee:</span>
+                    <span class="neon-text glow-text">₹{{ fee }}</span>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('exit_vehicle') }}" class="modern-form mt-4">
+                <input type="hidden" name="vehicle_number" value="{{ vehicle_number }}">
+                <input type="hidden" name="confirm_exit" value="1">
+                
+                <div class="form-group">
+                    <label for="payment_method">Select Payment Method</label>
+                    <select id="payment_method" name="payment_method" required>
+                        <option value="Cash" selected>Cash</option>
+                        <option value="Online">Online (QR)</option>
+                    </select>
+                </div>
+                
+                <div class="qr-code-box">
+                    <p style="font-size: 14px; text-transform: uppercase; margin-bottom: 10px; color: var(--text-muted);">Scan to Pay</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ParkingFee-{{ vehicle_number }}-{{ fee }}" alt="QR Code">
+                </div>
+                
+                <style>
+                    .qr-code-box {
+                        display: none;
+                        text-align: center;
+                        padding: 15px;
+                        margin-bottom: 20px;
+                        animation: fadeIn 0.4s ease;
+                    }
+                    .modern-form:has(select[name="payment_method"] option[value="Online"]:checked) .qr-code-box {
+                        display: block;
+                    }
+                    .qr-code-box img {
+                        background: #fff;
+                        padding: 10px;
+                        border-radius: 8px;
+                    }
+                </style>
+                
+                <button type="submit" class="btn btn-primary glow-effect w-100 mt-4 text-center">
+                    <span>Confirm & Exit</span>
+                </button>
+                <a href="{{ url_for('exit_vehicle') }}" class="btn btn-secondary w-100 mt-4 text-center" style="display: block; text-decoration: none;">
+                    Cancel
+                </a>
+            </form>
+        </div>
+
+        {% elif not success %}
+        <form method="POST" action="{{ url_for('exit_vehicle') }}" class="modern-form">
+            <div class="form-group">
+                <label for="vehicle_number">Vehicle Number</label>
+                <input type="text" id="vehicle_number" name="vehicle_number" required placeholder="e.g. MH 12 AB 1234" value="{{ prefill_vehicle }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary glow-effect w-100 mt-4">
+                <span>Check Out Details</span>
+            </button>
+        </form>
+        {% else %}
+        <div class="receipt">
+            <div class="receipt-header">
+                <h3>Exit Successful</h3>
+                <div class="checkmark-circle">
+                    <div class="background"></div>
+                    <div class="checkmark draw"></div>
+                </div>
+            </div>
+
+            <div class="receipt-details">
+                <div class="detail-row">
+                    <span>Vehicle:</span>
+                    <strong>{{ vehicle_number }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Entry:</span>
+                    <span>{{ entry_time }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Exit:</span>
+                    <span>{{ exit_time }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Duration:</span>
+                    <span>{{ duration }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Payment:</span>
+                    <span>{{ payment_method }}</span>
+                </div>
+                <hr class="receipt-divider">
+                <div class="detail-row total">
+                    <span>Total Fee:</span>
+                    <span class="neon-text glow-text">₹{{ fee }}</span>
+                </div>
+            </div>
+
+            <a href="{{ url_for('index') }}" class="btn btn-primary glow-effect w-100 mt-4 text-center">
+                <span>Return to Dashboard</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

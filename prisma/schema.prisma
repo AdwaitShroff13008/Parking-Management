@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model vehicles {
+  id             Int      @id @default(autoincrement())
+  vehicle_number String
+  owner_name     String
+  vehicle_type   String
+  parking_class  String   @default("Standard")
+  slot_number    Int
+  entry_time     String
+  exit_time      String?
+  payment_method String?
+  fee            Float?
+  status         String
+}
